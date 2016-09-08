@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class ButtonBehaviour : MonoBehaviour {
 	public Text print_info;
@@ -16,6 +17,8 @@ public class ButtonBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (EventSystem.current.currentSelectedGameObject != null)
+			Debug.Log (EventSystem.current.currentSelectedGameObject.name);
 	}
 
 	public void ClickedButton() {

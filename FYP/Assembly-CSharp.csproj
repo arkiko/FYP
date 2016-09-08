@@ -46,8 +46,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\ButtonBehaviour.cs" />
+     <Compile Include="Assets\Script\ButtonEvent.cs" />
      <Compile Include="Assets\Script\Conditions.cs" />
      <Compile Include="Assets\Script\Grid.cs" />
+     <Compile Include="Assets\Script\GridOverlay.cs" />
      <Compile Include="Assets\Script\playerController.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
