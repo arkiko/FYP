@@ -32,22 +32,34 @@ public class GridOverlay : MonoBehaviour {
 	void Start () 
 	{
 		GameObject text = GameObject.Find ("First_Value");
-		text.GetComponent<Text> ().text = gridSizeX.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = gridSizeX.ToString ();
+		}
 
 		text = GameObject.Find ("Second_Value");
-		text.GetComponent<Text> ().text = gridSizeY.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = gridSizeY.ToString ();
+		}
 
 		text = GameObject.Find ("Third_Value");
-		text.GetComponent<Text> ().text = smallStep.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = smallStep.ToString ();
+		}
 
 		text = GameObject.Find ("Fouth_Value");
-		text.GetComponent<Text> ().text = largeStep.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = largeStep.ToString ();
+		}
 
 		text = GameObject.Find ("Fifth_Value");
-		text.GetComponent<Text> ().text = startX.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = startX.ToString ();
+		}
 
 		text = GameObject.Find ("Sixth_Value");
-		text.GetComponent<Text> ().text = startY.ToString();
+		if (text != null) {
+			text.GetComponent<Text> ().text = startY.ToString ();
+		}
 	}
 
 	void Update () 
@@ -56,6 +68,7 @@ public class GridOverlay : MonoBehaviour {
 			if (EventSystem.current.currentSelectedGameObject != null) {
 				Debug.Log (EventSystem.current.currentSelectedGameObject.name);
 
+				bool found = false;
 				string temp = EventSystem.current.currentSelectedGameObject.name;
 				if (temp == "First_Minus") {
 					gridSizeX -= 1;
@@ -63,28 +76,28 @@ public class GridOverlay : MonoBehaviour {
 						gridSizeX = 1;
 					}
 
+					found = true;
 					GameObject text = GameObject.Find ("First_Value");
 					text.GetComponent<Text> ().text = gridSizeX.ToString ();
 				} else if (temp == "First_Plus") {
 					gridSizeX += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("First_Value");
 					text.GetComponent<Text> ().text = gridSizeX.ToString ();
-				} 
-
-				else if (temp == "Second_Minus") {
+				} else if (temp == "Second_Minus") {
 					gridSizeY -= 1;
 					if (gridSizeY <= 0) {
 						gridSizeY = 1;
 					}
 
+					found = true;
 					GameObject text = GameObject.Find ("Second_Value");
 					text.GetComponent<Text> ().text = gridSizeY.ToString ();
-				} 
-
-				else if (temp == "Second_Plus") {
+				} else if (temp == "Second_Plus") {
 					gridSizeY += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Second_Value");
 					text.GetComponent<Text> ().text = gridSizeY.ToString ();
 				} else if (temp == "Third_Minus") {
@@ -93,57 +106,61 @@ public class GridOverlay : MonoBehaviour {
 						smallStep = 1;
 					}
 
+					found = true;
 					GameObject text = GameObject.Find ("Third_Value");
 					text.GetComponent<Text> ().text = smallStep.ToString ();
 				} else if (temp == "Third_Plus") {
 					smallStep += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Third_Value");
 					text.GetComponent<Text> ().text = smallStep.ToString ();
-				} 
-
-				else if (temp == "Fouth_Minus") {
+				} else if (temp == "Fouth_Minus") {
 					largeStep -= 1;
 					if (largeStep <= 0) {
 						largeStep = 1;
 					}
 
+					found = true;
 					GameObject text = GameObject.Find ("Fouth_Value");
 					text.GetComponent<Text> ().text = largeStep.ToString ();
 				} else if (temp == "Fouth_Plus") {
 					largeStep += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Fouth_Value");
 					text.GetComponent<Text> ().text = largeStep.ToString ();
-				} 
-
-				else if (temp == "Fifth_Minus") {
+				} else if (temp == "Fifth_Minus") {
 					startX -= 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Fifth_Value");
 					text.GetComponent<Text> ().text = startX.ToString ();
 				} else if (temp == "Fifth_Plus") {
 					startX += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Fifth_Value");
 					text.GetComponent<Text> ().text = startX.ToString ();
-				} 
-
-				else if (temp == "Sixth_Minus") {
+				} else if (temp == "Sixth_Minus") {
 					startY -= 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Sixth_Value");
 					text.GetComponent<Text> ().text = startY.ToString ();
 				} else if (temp == "Sixth_Plus") {
 					startY += 1;
 
+					found = true;
 					GameObject text = GameObject.Find ("Sixth_Value");
 					text.GetComponent<Text> ().text = startY.ToString ();
 				}
 
-				lastScroll = Time.time;
-				GameObject myEventSystem = GameObject.Find ("EventSystem");
-				myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+				if (found == true) {
+					lastScroll = Time.time;
+					GameObject myEventSystem = GameObject.Find ("EventSystem");
+					myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+				}
 			}
 		}
 	}
