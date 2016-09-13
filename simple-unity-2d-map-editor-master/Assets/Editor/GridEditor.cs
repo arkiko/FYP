@@ -45,9 +45,6 @@ public class GridEditor : Editor {
 		grid.width = createSlider("Width",grid.width);
 		grid.height = createSlider("Height", grid.height);
 
-		grid.row = createSlider ("Row", grid.row);
-		grid.column = createSlider ("Column", grid.column);
-
 		if(GUILayout.Button("Open Grid Window")){
 			GridWindow window = (GridWindow)EditorWindow.GetWindow (typeof(GridWindow));
 			window.init();
@@ -58,14 +55,6 @@ public class GridEditor : Editor {
 		var newTilePrefab = (Transform)EditorGUILayout.ObjectField("Tile Prefab",grid.tilePrefab,typeof(Transform),false);
 		if(EditorGUI.EndChangeCheck()){
 			grid.tilePrefab = newTilePrefab;
-			Undo.RecordObject(target,"Grid Changed");
-		}
-
-		// Tile Centre
-		EditorGUI.BeginChangeCheck();
-		var newCentreTile = (GameObject)EditorGUILayout.ObjectField("Tile Centre",grid.centre,typeof(GameObject),false);
-		if(EditorGUI.EndChangeCheck()){
-			grid.centre = newCentreTile;
 			Undo.RecordObject(target,"Grid Changed");
 		}
 

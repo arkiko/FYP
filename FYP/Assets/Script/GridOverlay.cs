@@ -4,21 +4,18 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GridOverlay : MonoBehaviour {
-
-	public GameObject plane;
-
 	public bool showMain = true;
 	public bool showSub = false;
 
-	private int gridSizeX = 5;
-	private int gridSizeY = 5;
+	private int gridSizeX = 16;
+	private int gridSizeY = 10;
 	private int gridSizeZ = 0;
 
 	private float smallStep = 1;
 	private float largeStep = 1;
 
-	private float startX = -2;
-	private float startY = -2;
+	private float startX = -8;
+	private float startY = -5;
 	private float startZ = 0;
 
 	private float scrollRate = 0.1f;
@@ -29,8 +26,14 @@ public class GridOverlay : MonoBehaviour {
 	private Color mainColor = new Color(0f,1f,0f,1f);
 	private Color subColor = new Color(0f,0.5f,0f,1f);
 
+	private Plane _groundPlane;
+
+	public GameObject clon;
+
 	void Start () 
 	{
+		_groundPlane = new Plane(Vector3.forward, new Vector3(-8, -5, 0));
+
 		GameObject text = GameObject.Find ("First_Value");
 		if (text != null) {
 			text.GetComponent<Text> ().text = gridSizeX.ToString ();
@@ -64,6 +67,32 @@ public class GridOverlay : MonoBehaviour {
 
 	void Update () 
 	{
+		if (Input.GetMouseButtonDown (0)) {
+			Debug.Log ("Mouse Down2");
+			Debug.Log (Input.mousePosition);
+
+			int x = 0;
+			int y = 0;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+
+			float distance;
+			if (_groundPlane.Raycast (ray, out distance)) {
+				Vector3 worldPosition = ray.GetPoint (distance);
+				x = Mathf.RoundToInt (worldPosition.x - 0.5f);
+				y = Mathf.RoundToInt (worldPosition.y - 0.5f);
+
+				Debug.DrawLine (Camera.main.transform.position, worldPosition);
+				Debug.LogFormat ("Clicked positions: {0} | {1}", x, y);
+				//Debug.Log (ray.GetPoint (10));
+
+
+				GameObject gameObj = (GameObject)Instantiate (clon);
+				gameObj.transform.SetParent (GameObject.Find ("Canvas").transform, false);
+				gameObj.transform.position = new Vector3(x + 0.5f, y + 0.5f, 0);
+			}
+		}
+
+
 		if (lastScroll + scrollRate < Time.time) {
 			if (EventSystem.current.currentSelectedGameObject != null) {
 				Debug.Log (EventSystem.current.currentSelectedGameObject.name);
