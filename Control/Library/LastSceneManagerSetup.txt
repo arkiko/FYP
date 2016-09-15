@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Examples/Scenes/Third Person Controller.unity
+  isLoaded: 1
+  isActive: 1

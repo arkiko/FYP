@@ -28,7 +28,9 @@ public class GridOverlay : MonoBehaviour {
 
 	private Plane _groundPlane;
 
-	public GameObject clon;
+	public GameObject Tile_Clone;
+	private bool Menu_Active = false;
+	private bool Place_Delete = true;
 
 	void Start () 
 	{
@@ -67,31 +69,9 @@ public class GridOverlay : MonoBehaviour {
 
 	void Update () 
 	{
-		if (Input.GetMouseButtonDown (0)) {
-			Debug.Log ("Mouse Down2");
-			Debug.Log (Input.mousePosition);
-
-			int x = 0;
-			int y = 0;
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-
-			float distance;
-			if (_groundPlane.Raycast (ray, out distance)) {
-				Vector3 worldPosition = ray.GetPoint (distance);
-				x = Mathf.RoundToInt (worldPosition.x - 0.5f);
-				y = Mathf.RoundToInt (worldPosition.y - 0.5f);
-
-				Debug.DrawLine (Camera.main.transform.position, worldPosition);
-				Debug.LogFormat ("Clicked positions: {0} | {1}", x, y);
-				//Debug.Log (ray.GetPoint (10));
-
-
-				GameObject gameObj = (GameObject)Instantiate (clon);
-				gameObj.transform.SetParent (GameObject.Find ("Canvas").transform, false);
-				gameObj.transform.position = new Vector3(x + 0.5f, y + 0.5f, 0);
-			}
-		}
-
+		var menu = GameObject.Find("Canvas").transform.Find ("Menu_Active").gameObject;
+		if (menu.activeSelf == false)
+			Menu_Active = false;
 
 		if (lastScroll + scrollRate < Time.time) {
 			if (EventSystem.current.currentSelectedGameObject != null) {
@@ -99,6 +79,28 @@ public class GridOverlay : MonoBehaviour {
 
 				bool found = false;
 				string temp = EventSystem.current.currentSelectedGameObject.name;
+				if (temp == "Menu") {
+					menu = GameObject.Find("Canvas").transform.Find ("Menu_Active").gameObject;
+					menu.SetActive (!menu.activeSelf);
+
+					if (menu.activeSelf == true)
+						Menu_Active = true;
+
+					found = true;
+				}
+
+				if (temp == "Place_Delete") {
+					if (Place_Delete == true) {
+						Place_Delete = false;
+						GameObject.Find ("Canvas").transform.Find ("Menu_Active").transform.Find ("Place_Delete").GetComponentInChildren<Text> ().text = "Delete";
+					} else {
+						Place_Delete = true;
+						GameObject.Find ("Canvas").transform.Find ("Menu_Active").transform.Find ("Place_Delete").GetComponentInChildren<Text> ().text = "Place";
+					}
+
+					found = true;
+				}
+
 				if (temp == "First_Minus") {
 					gridSizeX -= 1;
 					if (gridSizeX <= 0) {
@@ -189,6 +191,40 @@ public class GridOverlay : MonoBehaviour {
 					lastScroll = Time.time;
 					GameObject myEventSystem = GameObject.Find ("EventSystem");
 					myEventSystem.GetComponent<UnityEngine.EventSystems.EventSystem> ().SetSelectedGameObject (null);
+				}
+			}
+		}
+
+		if (Input.GetMouseButtonDown (0) && !Menu_Active) {
+			Debug.Log ("Mouse Down2");
+			Debug.Log (Input.mousePosition);
+
+			int x = 0;
+			int y = 0;
+			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+
+			float distance;
+			if (_groundPlane.Raycast (ray, out distance)) {
+				Vector3 worldPosition = ray.GetPoint (distance);
+				x = Mathf.RoundToInt (worldPosition.x - 0.5f);
+				y = Mathf.RoundToInt (worldPosition.y - 0.5f);
+
+				Debug.DrawLine (Camera.main.transform.position, worldPosition);
+				Debug.LogFormat ("Clicked positions: {0} | {1}", x, y);
+
+				if (Place_Delete) 
+				{
+					GameObject gameObj = (GameObject)Instantiate (Tile_Clone);
+					gameObj.transform.position = new Vector3 (x + 0.5f, y + 0.5f, 0);
+				} 
+				else {
+					foreach(GameObject Delete_Tile in GameObject.FindGameObjectsWithTag("Tile"))
+					{
+						Vector3 temp_pos = new Vector3 (x + 0.5f, y + 0.5f, 0);
+						if (Delete_Tile.transform.position == temp_pos) {
+							Destroy (Delete_Tile);
+						}
+					}
 				}
 			}
 		}
